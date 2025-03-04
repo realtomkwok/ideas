@@ -52,6 +52,7 @@ const AppAction: FC<AppAction & { position: { x: number; y: number } }> = ({
                     label={label}
                     icon={{ name: icon! }}
                     size="small"
+                    role="secondary"
                 />
             )}
         </motion.div>
@@ -185,6 +186,7 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
                 label={name}
                 icon={{ name: icon }}
                 size="large"
+                role="primary"
             />
 
             <motion.div
