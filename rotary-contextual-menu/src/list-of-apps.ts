@@ -18,17 +18,21 @@ export const apps: Application[] = [
                 label: "contacts",
                 icon: "contacts",
             },
-        ],
-    },
-    {
-        id: "email",
-        name: "Email",
-        icon: "email",
-        actions: [
             {
-                label: "draft",
-                icon: "draft",
+                label: "favorites",
+                icon: "favorite",
             },
         ],
     },
+    // {
+    //     id: "email",
+    //     name: "Email",
+    //     icon: "email",
+    //     actions: [
+    //         {
+    //             label: "draft",
+    //             icon: "draft",
+    //         },
+    //     ],
+    // },
 ]
