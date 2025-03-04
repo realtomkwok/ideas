@@ -1,0 +1,12 @@
+.wrapper {
+    position: relative;
+    width: 5rem;
+    height: 5rem;
+}
+
+.app-container {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

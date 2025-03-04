@@ -1,0 +1,85 @@
+:root {
+    --md-state-default: 0;
+    --md-state-hover: 0.08;
+    --md-state-focus: 0.10;
+    --md-state-press: 0.10;
+    --md-state-drag: 0.16;
+
+    --md-rounding-xs: 0.25rem;
+    --md-rounding-sm: 0.5rem;
+    --md-rounding-md: 0.8rem;
+    --md-rounding-lg: 1rem;
+    --md-rounding-xl: 1.8rem;
+    --md-rounding-full: 1000px;
+}
+
+.drawer {
+    position: fixed;
+    display: flex;
+    left: 0;
+    right: 0;
+    bottom: 50%;
+    width: 100%;
+    height: 8rem;
+    align-items: center;
+    justify-content: center;
+    border-top-left-radius: 1rem;
+    background: var(--md-sys-color-surface-container);
+    color: var(--md-sys-color-on-surface);
+    padding: 0 1rem;
+}
+
+.apps {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.btn-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 4rem;
+    width: 4rem;
+    background: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    border-radius: var(--md-rounding-full);
+    overflow: hidden;
+}
+
+.btn-wrapper .state-layer {
+    width: 100%;
+    height: 100%;
+    opacity: var(--md-state-default);
+    background: var(--md-sys-color-on-primary-container);
+
+}
+
+.btn-wrapper label {
+    display: none;
+}
+
+.visually-hidden {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+.app-icon {
+    position: absolute;
+}
+
+.scrim {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--md-sys-color-scrim)
+
+}
