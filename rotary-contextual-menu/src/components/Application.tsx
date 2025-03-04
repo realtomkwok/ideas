@@ -1,7 +1,7 @@
 import { Button } from "./Button.tsx"
 import { SymbolCodepoints } from "react-material-symbols"
 import { FC, useEffect, useRef, useState } from "react"
-import { motion } from "motion/react"
+import { motion, Variants } from "motion/react"
 import useAppStore from "../store/appStore.ts"
 import styles from "./Application.module.css"
 import useDevModeStore from "../store/devModeStore.ts"
@@ -25,14 +25,15 @@ const AppAction: FC<AppAction & { position: { x: number; y: number } }> = ({
     img,
     position,
 }) => {
+    const motionVariants: Variants = {
+        hidden: { opacity: 0, scale: 0.5 },
+        visible: { opacity: 1, scale: 1 },
+    }
+
     return (
         <motion.div
             className={styles["action-container"]}
-            initial={{
-                opacity: 0,
-                scale: 0.5,
-            }}
-            animate={{ opacity: 1, scale: 1 }}
+            variants={motionVariants}
             style={{
                 left: `${position.x}px`,
                 top: `${position.y}px`,
@@ -61,7 +62,7 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
     const selectApp = useAppStore((state) => state.selectApp)
     const clearSelection = useAppStore((state) => state.clearSelection)
     const appRef = useRef<HTMLDivElement>(null)
-    const [showActions, setShowActions] = useState(true)
+    const [showActions, setShowActions] = useState(false)
     const [actionPositions, setActionPositions] = useState<
         Array<{ x: number; y: number }>
     >([])
@@ -156,14 +157,27 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
         setShowActions(false)
     }
 
+    const motionVariants: Variants = {
+        hidden: { display: "none", opacity: 0 },
+        visible: {
+            display: "block",
+            opacity: 1,
+            transition: { staggerChildren: 0.1 },
+        },
+    }
+
     return (
         <motion.div
             ref={appRef}
             className={styles["app-container"]}
-            whileTap={{ zIndex: 100 }}
+            whileTap={{
+                scale: 1.2,
+                zIndex: 100,
+            }}
             onTapStart={() => handleOnTapStart(id)}
             onTap={() => handleCancelTap()}
             onTapCancel={() => handleCancelTap()}
+            layout
         >
             <Button
                 type="application"
@@ -173,17 +187,21 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
                 size="large"
             />
 
-            {!devMode ||
-                (showActions &&
-                    actions.map((action, index) => (
-                        <AppAction
-                            key={`${id}-action-${index}`}
-                            label={action.label}
-                            icon={action.icon}
-                            img={action.img}
-                            position={actionPositions[index] || { x: 0, y: 0 }}
-                        />
-                    )))}
+            <motion.div
+                variants={motionVariants}
+                initial="hidden"
+                animate={showActions ? "visible" : "hidden"}
+            >
+                {actions.map((action, index) => (
+                    <AppAction
+                        key={`${id}-action-${index}`}
+                        label={action.label}
+                        icon={action.icon}
+                        img={action.img}
+                        position={actionPositions[index] || { x: 0, y: 0 }}
+                    />
+                ))}
+            </motion.div>
 
             {/* Information */}
 
