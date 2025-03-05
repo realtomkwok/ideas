@@ -11,22 +11,45 @@
     --md-rounding-lg: 1rem;
     --md-rounding-xl: 1.8rem;
     --md-rounding-full: 1000px;
+
+    --z-drawer: 1;
+    --z-scrim: 50;
+    --z-active-app: 100;
+}
+
+.home {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
 }
 
 .drawer {
     position: fixed;
+    left: 50%;
+    bottom: 4rem;
     display: flex;
-    left: 0;
-    right: 0;
-    bottom: 50%;
-    width: 100%;
-    height: 8rem;
+    width: fit-content;
+    height: 6rem;
     align-items: center;
     justify-content: center;
-    border-top-left-radius: 1rem;
     background: var(--md-sys-color-surface-container);
     color: var(--md-sys-color-on-surface);
     padding: 0 1rem;
+    border-radius: 1000px;
+    transform: translate(-50%, -50%);
+    z-index: var(--z-drawer);
+}
+
+.scrim {
+    position: fixed;
+    bottom: calc(50% - 6rem);
+    left: 50%;
+    transform: translate(-50%, 4rem);
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--md-sys-color-scrim);
+    z-index: var(--z-scrim);
+    pointer-events: none;
 }
 
 .apps {
@@ -71,17 +94,6 @@
 
 .app-icon {
     position: absolute;
-}
-
-.scrim {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: var(--md-sys-color-scrim)
-
 }
 
 /* Debugger */

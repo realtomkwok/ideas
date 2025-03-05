@@ -5,6 +5,7 @@ import { motion, Variants } from "motion/react"
 import useAppStore from "../store/appStore.ts"
 import styles from "./Application.module.css"
 import useDevModeStore from "../store/devModeStore.ts"
+import { duration, easing } from "../libs/motionUtils.ts"
 
 export interface Application {
     id: string
@@ -71,18 +72,26 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
     const devMode = useDevModeStore((state) => state.devMode)
     const setDevMode = useDevModeStore((state) => state.setDevMode)
 
-    // Radius control - distance between the app and its actions in pixels
-    const [radius, setRadius] = useState(80)
+    // Radius - distance between the app and its actions in pixels
+    const radius = 80
 
     // Scope control - how much of the circle to use for actions
     // Changed default to use a half circle at the bottom (π to 2π)
-    const [scopeRadians, setScopeRadians] = useState(Math.PI)
+    const [scopeRadians, setscopeRadians] = useState(Math.PI / 1.5)
 
     // Start angle offset (θ) - where the first item should be positioned
     const [startAngle, setStartAngle] = useState(-45)
 
     // Listen to ref element's dimensions for accurate positions of App Actions
-    const [refDimensions, setRefDimensions] = useState({ width: 0, height: 0 })
+    const [refDimensions, setRefDimensions] = useState({
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+    })
+
+    const activeAppId = useAppStore((state) => state.activeAppId)
+    const isActive = id === activeAppId
 
     useEffect(() => {
         const updateRefDimensions = () => {
@@ -90,6 +99,8 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
                 const rect = appRef.current.getBoundingClientRect()
 
                 setRefDimensions({
+                    x: rect.x,
+                    y: rect.y,
                     width: rect.width,
                     height: rect.height,
                 })
@@ -119,6 +130,9 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
     // Calculate positions of actions in a ring around the central button
     useEffect(() => {
         if (showActions && appRef.current && actions.length > 0) {
+            // Initialize the scope (a full circle) for the app content
+            const scope = Math.PI
+
             const positions = actions.map((_, index) => {
                 // Use half dimensions for the center point
                 const centerX = refDimensions.width / 2
@@ -132,6 +146,7 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
                     (index * scopeRadians) /
                         (actions.length > 1 ? actions.length - 1 : 1)
 
+                // If the app
                 const x = centerX + radius * Math.cos(angle)
                 const y = centerY + radius * Math.sin(angle)
 
@@ -163,7 +178,11 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
         visible: {
             display: "block",
             opacity: 1,
-            transition: { staggerChildren: 0.1 },
+            transition: {
+                duration: duration.long4,
+                ease: easing.decelerated,
+                staggerChildren: 0.1,
+            },
         },
     }
 
@@ -171,6 +190,9 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
         <motion.div
             ref={appRef}
             className={styles["app-container"]}
+            style={{
+                zIndex: isActive ? 100 : 0,
+            }}
             whileTap={{
                 scale: 1.2,
                 zIndex: 100,
@@ -178,7 +200,6 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
             onTapStart={() => handleOnTapStart(id)}
             onTap={() => handleCancelTap()}
             onTapCancel={() => handleCancelTap()}
-            layout
         >
             <Button
                 type="application"
@@ -204,110 +225,6 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
                     />
                 ))}
             </motion.div>
-
-            {/* Information */}
-
-            {devMode && (
-                <div
-                    style={{
-                        position: "absolute",
-                        top: "200px",
-                        left: "200px",
-                        backgroundColor: "rgba(0,0,0,0.7)",
-                        color: "white",
-                        padding: "5px",
-                        borderRadius: "3px",
-                        fontSize: "12px",
-                        width: "200px",
-                        zIndex: 1000,
-                    }}
-                >
-                    <div>
-                        Dimensions: {Math.round(refDimensions.width)}×
-                        {Math.round(refDimensions.height)}
-                    </div>
-                    <div>
-                        Center: ({Math.round(refDimensions.width / 2)},{" "}
-                        {Math.round(refDimensions.height / 2)})
-                    </div>
-                    <div>
-                        Start Angle: {(startAngle / Math.PI).toFixed(2)}π (
-                        {Math.round((startAngle * 180) / Math.PI)}°)
-                        <input
-                            type="range"
-                            min="0"
-                            max="360"
-                            step="1"
-                            value={startAngle}
-                            onChange={(e) =>
-                                setStartAngle(parseInt(e.target.value))
-                            }
-                        />
-                    </div>
-                    <div>
-                        Scope: {(scopeRadians / Math.PI).toFixed(2)}π (
-                        {Math.round((scopeRadians * 180) / Math.PI)}°)
-                        <input
-                            type="range"
-                            min="0.25"
-                            max="2"
-                            step="0.25"
-                            value={scopeRadians / Math.PI}
-                            onChange={(e) =>
-                                setScopeRadians(
-                                    parseFloat(e.target.value) * Math.PI
-                                )
-                            }
-                        />
-                    </div>
-                    <div>
-                        Radius: {radius}px
-                        <input
-                            type="range"
-                            min="0"
-                            max="200"
-                            value={radius}
-                            onChange={(e) =>
-                                setRadius(parseInt(e.target.value))
-                            }
-                        />
-                    </div>
-                </div>
-            )}
-
-            {/* Center point debug indicator */}
-            {devMode && (
-                <div
-                    style={{
-                        position: "absolute",
-                        width: "10px",
-                        height: "10px",
-                        backgroundColor: "red",
-                        borderRadius: "50%",
-                        top: `${refDimensions.height / 2}px`,
-                        left: `${refDimensions.width / 2}px`,
-                        transform: "translate(-50%, -50%)",
-                        zIndex: 999,
-                    }}
-                />
-            )}
-
-            {/* Circle radius indicator */}
-            {devMode && (
-                <div
-                    style={{
-                        position: "absolute",
-                        width: `${radius * 2}px`,
-                        height: `${radius * 2}px`,
-                        border: "1px dashed rgba(255,0,0,0.5)",
-                        borderRadius: "50%",
-                        top: `${refDimensions.height / 2}px`,
-                        left: `${refDimensions.width / 2}px`,
-                        transform: "translate(-50%, -50%)",
-                        zIndex: 998,
-                    }}
-                />
-            )}
         </motion.div>
     )
 }

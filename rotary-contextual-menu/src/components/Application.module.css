@@ -5,10 +5,15 @@
     justify-content: center;
     width: 100%;
     height: 100%;
+    z-index: var(--z-active-app);
 }
 
 .action-container {
     position: absolute;
     margin: 0;
     padding: 0;
+}
+
+.scrim {
+
 }

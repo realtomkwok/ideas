@@ -1,13 +1,23 @@
 import "./App.css"
-// import { Application } from "./components/Application.tsx"
 import useAppStore from "./store/appStore.ts"
-import { motion } from "motion/react"
 import { Application } from "./components/Application.tsx"
-import useDevModeStore from "./store/devModeStore.ts"
+import { motion } from "motion/react"
+import { transition } from "./libs/motionUtils.ts"
+import { useEffect, useState } from "react"
 
 const Drawer: React.FC = () => {
     const apps = useAppStore((state) => state.apps)
-    const activeAppId = useAppStore((state) => state.activeAppId)
+    const selectedAppId = useAppStore((state) => state.activeAppId)
+
+    const [showScrim, setShowScrim] = useState(false)
+
+    useEffect(() => {
+        if (selectedAppId) {
+            setShowScrim(true)
+        } else {
+            setShowScrim(false)
+        }
+    }, [selectedAppId])
 
     return (
         <div className="drawer">
@@ -24,10 +34,19 @@ const Drawer: React.FC = () => {
             </div>
             <motion.div
                 className="scrim"
+                initial={{ display: "none" }}
                 animate={
-                    activeAppId
-                        ? { display: "block", opacity: 0.4 }
-                        : { display: "none", opacity: 0 }
+                    showScrim
+                        ? {
+                              display: "block",
+                              opacity: 0.4,
+                              transition: transition.enter,
+                          }
+                        : {
+                              display: "none",
+                              opacity: 0,
+                              transition: transition.exit,
+                          }
                 }
             />
         </div>
@@ -35,20 +54,9 @@ const Drawer: React.FC = () => {
 }
 
 function App() {
-    const activeAppId = useAppStore((state) => state.activeAppId)
-    const devMode = useDevModeStore((state) => state.devMode)
-
     return (
-        <div
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-            }}
-        >
+        <div className="home">
             <Drawer />
-            <p style={{ zIndex: 200 }}>Current app: {activeAppId} </p>
-            <p>Dev Mode: {devMode ? "on" : "off"}</p>
         </div>
     )
 }
