@@ -56,6 +56,14 @@ const Drawer: React.FC = () => {
 function App() {
     return (
         <div className="home">
+            <div className="modal">
+                <h1>
+                    Rotary <br /> Contextual Menu
+                </h1>
+                <caption>
+                    Long press the app icons to activate the contextual menu.
+                </caption>
+            </div>
             <Drawer />
         </div>
     )

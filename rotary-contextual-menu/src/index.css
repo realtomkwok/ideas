@@ -105,6 +105,15 @@
 body {
     color: var(--md-sys-color-on-surface);
     background-color: var(--md-sys-color-surface);
+    overflow: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'neue-haas-grotesk-display', 'Helvetica Neue', 'Arial', sans-serif;
+}
+
+p, caption, label {
+    font-family: 'neue-haas-grotesk-text', 'Helvetica Neue', 'Arial', sans-serif;
 }
 
 button {

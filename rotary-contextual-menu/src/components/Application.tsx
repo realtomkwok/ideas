@@ -41,6 +41,8 @@ const AppAction: FC<AppAction & { position: { x: number; y: number } }> = ({
                 translateX: `-50%`,
                 translateY: `-50%`,
             }}
+            onPointerEnter={() => console.log("pointer enter")}
+            onPointerLeave={() => console.log("pointer leave")}
         >
             {img ? (
                 <div className="btn-wrapper">
@@ -130,9 +132,6 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
     // Calculate positions of actions in a ring around the central button
     useEffect(() => {
         if (showActions && appRef.current && actions.length > 0) {
-            // Initialize the scope (a full circle) for the app content
-            const scope = Math.PI
-
             const positions = actions.map((_, index) => {
                 // Use half dimensions for the center point
                 const centerX = refDimensions.width / 2
@@ -146,9 +145,18 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
                     (index * scopeRadians) /
                         (actions.length > 1 ? actions.length - 1 : 1)
 
-                // If the app
-                const x = centerX + radius * Math.cos(angle)
-                const y = centerY + radius * Math.sin(angle)
+                // Flip the action menu by multiplying -1
+
+                const x =
+                    centerX +
+                    radius *
+                        Math.cos(angle) *
+                        (refDimensions.x > window.innerWidth / 2 ? -1 : 1)
+                const y =
+                    centerY +
+                    radius *
+                        Math.sin(angle) *
+                        (refDimensions.y < window.innerHeight / 2 ? -1 : 1)
 
                 console.log(
                     `Action ${index} - ${_.label}: (${x}, ${y}) at angle ${angle} rad`
@@ -174,9 +182,9 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
     }
 
     const motionVariants: Variants = {
-        hidden: { display: "none", opacity: 0 },
+        hidden: { visibility: "hidden", opacity: 0 },
         visible: {
-            display: "block",
+            visibility: "visible",
             opacity: 1,
             transition: {
                 duration: duration.long4,
@@ -197,9 +205,6 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
                 scale: 1.2,
                 zIndex: 100,
             }}
-            onTapStart={() => handleOnTapStart(id)}
-            onTap={() => handleCancelTap()}
-            onTapCancel={() => handleCancelTap()}
         >
             <Button
                 type="application"
@@ -208,6 +213,9 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
                 icon={{ name: icon }}
                 size="large"
                 role="primary"
+                onTapStart={() => handleOnTapStart(id)}
+                onTap={() => handleCancelTap()}
+                onTapCancel={() => handleCancelTap()}
             />
 
             <motion.div

@@ -15,6 +15,9 @@
     --z-drawer: 1;
     --z-scrim: 50;
     --z-active-app: 100;
+
+    --drawer-margin: 2rem;
+    --drawer-height: 6rem;
 }
 
 .home {
@@ -26,10 +29,10 @@
 .drawer {
     position: fixed;
     left: 50%;
-    bottom: 4rem;
+    bottom: var(--drawer-margin);
     display: flex;
     width: fit-content;
-    height: 6rem;
+    height: var(--drawer-height);
     align-items: center;
     justify-content: center;
     background: var(--md-sys-color-surface-container);
@@ -42,9 +45,9 @@
 
 .scrim {
     position: fixed;
-    bottom: calc(50% - 6rem);
+    bottom: calc(50% - var(--drawer-height));
     left: 50%;
-    transform: translate(-50%, 4rem);
+    transform: translate(-50%, var(--drawer-margin));
     width: 100vw;
     height: 100vh;
     background-color: var(--md-sys-color-scrim);
@@ -96,26 +99,37 @@
     position: absolute;
 }
 
-/* Debugger */
-
-.bounding-box {
-    position: absolute;
-    border: 1px dashed rgba(200, 200, 200, 0.5);
-    width: 100%;
-    height: 100%;
+.modal {
+    position: fixed;
+    top: calc(50% - var(--drawer-height) + var(--drawer-margin));
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: 50%;
+    background-color: var(--md-sys-color-primary-fixed);
+    color: var(--md-sys-color-on-primary-fixed);
+    border-radius: var(--md-rounding-md);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-.point {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    z-index: 500;
+.modal h1 {
+    font-size: 2rem;
+    font-weight: 500;
+    letter-spacing: 0.02rem;
+    text-align: left;
+    margin-block-start: 0;
+    margin-block-end: 0;
 }
 
-.center {
-    background: blue;
-}
-
-.topLeft {
-    background: red;
+.modal caption {
+    color: var(--md-sys-color-on-primary-fixed-variant);
+    position: relative;
+    align-self: flex-start;
+    font-size: 1rem;
+    font-weight: 400;
+    text-align: left;
+    margin-block-end: 0.5rem;
 }

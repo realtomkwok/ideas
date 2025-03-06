@@ -25,17 +25,6 @@ export const apps: Application[] = [
         ],
     },
     {
-        id: "email",
-        name: "Email",
-        icon: "email",
-        actions: [
-            {
-                label: "draft",
-                icon: "draft",
-            },
-        ],
-    },
-    {
         id: "calendar",
         name: "Calendar",
         icon: "calendar_month",
@@ -100,5 +89,4 @@ export const apps: Application[] = [
             },
         ],
     },
-    
 ]
