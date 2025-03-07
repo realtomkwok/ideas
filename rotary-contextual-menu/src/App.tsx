@@ -39,7 +39,7 @@ const Drawer: React.FC = () => {
                     showScrim
                         ? {
                               display: "block",
-                              opacity: 0.4,
+                              opacity: 0.8,
                               transition: transition.enter,
                           }
                         : {
@@ -57,12 +57,8 @@ function App() {
     return (
         <div className="home">
             <div className="modal">
-                <h1>
-                    Rotary <br /> Contextual Menu
-                </h1>
-                <caption>
-                    Long press the app icons to activate the contextual menu.
-                </caption>
+                <h1>Rotary Contextual Menu</h1>
+                <p>Long press the app icons to activate the contextual menu.</p>
             </div>
             <Drawer />
         </div>
