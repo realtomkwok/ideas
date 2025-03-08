@@ -33,6 +33,8 @@ const AppAction: FC<
             opacity: 1,
             scale: isSelected ? 1.2 : 1,
             zIndex: isSelected ? 50 : 0,
+            translateX: isSelected ? "-40%" : "-50%",
+            translateY: isSelected ? "-100%" : "-50%",
         },
     }
 
@@ -49,16 +51,6 @@ const AppAction: FC<
                 translateY: `-50%`,
             }}
         >
-            {isSelected && (
-                <h1
-                    className={styles["action-label"]}
-                    style={{
-                        top: "-500%",
-                    }}
-                >
-                    {actionLabel}
-                </h1>
-            )}
             <motion.div
                 className={styles["action-label"]}
                 initial={{ visibility: "hidden", opacity: 0 }}
@@ -66,7 +58,9 @@ const AppAction: FC<
                     visibility: "visible",
                     opacity: isSelected ? 1 : 0,
                 }}
-            ></motion.div>
+            >
+                {actionLabel}
+            </motion.div>
             {img ? (
                 <div className="btn-wrapper">
                     <img src={img} alt={label} />
@@ -307,52 +301,54 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
     }
 
     return (
-        <motion.div
-            ref={appRef}
-            className={styles["app-container"]}
-            style={{
-                zIndex: isActive ? 100 : 0,
-            }}
-            whileTap={{
-                zIndex: 100,
-                transition: {
-                    duration: duration.medium4,
-                    easing: easing.decelerated,
-                },
-            }}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-        >
-            <Button
-                type="application"
-                id={`app_${id}`}
-                label={name}
-                icon={{ name: icon }}
-                size="large"
-                role="primary"
-                onTapStart={() => handleOnTapStart(id)}
-                onTap={() => handleCancelTap()}
-                onTapCancel={() => handleCancelTap()}
-            />
-
+        <>
             <motion.div
-                variants={motionVariants}
-                initial="hidden"
-                animate={showActions ? "visible" : "hidden"}
-                ref={actionContainerRef}
+                ref={appRef}
+                className={styles["app-container"]}
+                style={{
+                    zIndex: isActive ? 100 : 0,
+                }}
+                whileTap={{
+                    zIndex: 100,
+                    transition: {
+                        duration: duration.medium4,
+                        easing: easing.decelerated,
+                    },
+                }}
+                onPointerMove={handlePointerMove}
+                onPointerUp={handlePointerUp}
             >
-                {actions.map((action, index) => (
-                    <AppAction
-                        key={index}
-                        id={`${id}-action-${index}`}
-                        label={action.label}
-                        icon={action.icon}
-                        img={action.img}
-                        position={actionPositions[index] || { x: 0, y: 0 }}
-                        isSelected={selectedActionIndex === index}
-                    />
-                ))}
+                <Button
+                    type="application"
+                    id={`app_${id}`}
+                    label={name}
+                    icon={{ name: icon }}
+                    size="large"
+                    role="primary"
+                    onTapStart={() => handleOnTapStart(id)}
+                    onTap={() => handleCancelTap()}
+                    onTapCancel={() => handleCancelTap()}
+                />
+
+                <motion.div
+                    variants={motionVariants}
+                    initial="hidden"
+                    animate={showActions ? "visible" : "hidden"}
+                    ref={actionContainerRef}
+                >
+                    {actions.map((action, index) => (
+                        <AppAction
+                            key={index}
+                            id={`${id}-action-${index}`}
+                            label={action.label}
+                            icon={action.icon}
+                            img={action.img}
+                            position={actionPositions[index] || { x: 0, y: 0 }}
+                            isSelected={selectedActionIndex === index}
+                        />
+                    ))}
+                </motion.div>
             </motion.div>
-        </motion.div>
+        </>
     )
 }
