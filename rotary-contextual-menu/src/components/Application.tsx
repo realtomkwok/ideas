@@ -5,6 +5,7 @@ import { motion, Variants } from "motion/react"
 import useAppStore from "../store/appStore.ts"
 import styles from "./Application.module.css"
 import { duration, easing } from "../libs/motionUtils.ts"
+import { toTitleCase } from "../libs/utils.ts"
 
 export interface Application {
     id: string
@@ -24,25 +25,18 @@ const AppAction: FC<
     AppAction & {
         position: { x: number; y: number }
         isSelected: boolean
-        actionIndex: number
-        onPointerEnter: (id: number) => void
     }
-> = ({
-    label,
-    icon,
-    img,
-    position,
-    isSelected,
-    actionIndex,
-    onPointerEnter,
-}) => {
+> = ({ label, icon, img, position, isSelected }) => {
     const motionVariants: Variants = {
         hidden: { opacity: 0, scale: 0.5 },
         visible: {
             opacity: 1,
-            scale: isSelected ? 1.3 : 1,
+            scale: isSelected ? 1.2 : 1,
+            zIndex: isSelected ? 50 : 0,
         },
     }
+
+    const actionLabel = toTitleCase(label)
 
     return (
         <motion.div
@@ -54,12 +48,25 @@ const AppAction: FC<
                 translateX: `-50%`,
                 translateY: `-50%`,
             }}
-            onPointerEnter={() => {
-                console.log("pointer enters")
-                onPointerEnter(actionIndex)
-            }}
-            onPointerLeave={() => console.log("pointer leaves")}
         >
+            {isSelected && (
+                <h1
+                    className={styles["action-label"]}
+                    style={{
+                        top: "-500%",
+                    }}
+                >
+                    {actionLabel}
+                </h1>
+            )}
+            <motion.div
+                className={styles["action-label"]}
+                initial={{ visibility: "hidden", opacity: 0 }}
+                animate={{
+                    visibility: "visible",
+                    opacity: isSelected ? 1 : 0,
+                }}
+            ></motion.div>
             {img ? (
                 <div className="btn-wrapper">
                     <img src={img} alt={label} />
@@ -90,7 +97,7 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
     const longPressTimeRef = useRef<number | null>(null)
     const isPressingRef = useRef<boolean>(false)
     // Local States
-    const [showActions, setShowActions] = useState(false)
+    const [showActions, setShowActions] = useState<boolean>(false)
     const [actionPositions, setActionPositions] = useState<
         Array<{ x: number; y: number }>
     >([])
@@ -186,47 +193,6 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
         RADIUS,
     ])
 
-    // Add a global listener for pointer events and find the closest action to the pointer
-    useEffect(() => {
-        const handleGlobalPointerMove = (e: PointerEvent) => {
-            if (!showActions) return
-
-            const closestActionIndex = findClosestAction(e.x, e.y)
-
-            // Only update if there's a change to avoid unnecessary rerenders
-            if (closestActionIndex !== selectedActionIndex) {
-                setSelectedActionIndex(closestActionIndex)
-
-                if (closestActionIndex !== null) {
-                    console.log(
-                        `Hovering: ${actions[closestActionIndex].label}`
-                    )
-                }
-            }
-        }
-
-        const handleGlobalPointerUp = () => {
-            if (showActions && selectedActionIndex !== null) {
-                const selectedAction = actions[selectedActionIndex]
-                console.log(`Selected action: \`${selectedAction.label}`)
-                // Push to the store
-                selectAction(selectedAction)
-            }
-        }
-
-        if (showActions) {
-            // Listen for user's moving the pointer
-            window.addEventListener("pointermove", handleGlobalPointerMove)
-            // Listen for user's stop moving the pointer
-            window.addEventListener("pointerup", handleGlobalPointerUp)
-        }
-
-        return () => {
-            window.removeEventListener("pointermove", handleGlobalPointerMove)
-            window.removeEventListener("pointerup", handleGlobalPointerUp)
-        }
-    }, [actions, showActions, selectedActionIndex])
-
     // Find the closest action to the pointer
     function findClosestAction(
         pointerX: number,
@@ -240,8 +206,6 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
         const containerX = actionContainerRect.x
         const containerY = actionContainerRect.y
 
-        console.log({ containerX, containerY })
-
         let closestActionIndex = null
         let closestDistance = Infinity
 
@@ -250,8 +214,8 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
             const actionX = containerX + position.x - 56
             const actionY = containerY + position.y - 48
 
-            // Log the calculated positions for debugging
-            console.log(`Action ${index} at (${actionX}, ${actionY})`)
+            // // Log the calculated positions for debugging
+            // console.log(`Action ${index} at (${actionX}, ${actionY})`)
 
             const distance = Math.sqrt(
                 Math.pow(pointerX - actionX, 2) +
@@ -299,13 +263,13 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
         setSelectedActionIndex(closestAction)
     }
 
-    function handleActionSelect(index: number) {
-        setSelectedActionIndex(index)
-    }
+    // function handleActionSelect(index: number) {
+    //     setSelectedActionIndex(index)
+    // }
 
     function handlePointerUp() {
         if (showActions && selectedActionIndex !== null) {
-            console.log(`Executing action: ${selectedActionIndex}`)
+            selectAction(actions[selectedActionIndex])
         }
 
         cleanupPress()
@@ -385,9 +349,7 @@ export const Application: FC<Application> = ({ id, name, icon, actions }) => {
                         icon={action.icon}
                         img={action.img}
                         position={actionPositions[index] || { x: 0, y: 0 }}
-                        actionIndex={index}
                         isSelected={selectedActionIndex === index}
-                        onPointerEnter={handleActionSelect}
                     />
                 ))}
             </motion.div>

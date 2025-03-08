@@ -35,15 +35,17 @@
     height: var(--drawer-height);
     align-items: center;
     justify-content: center;
-    background: var(--md-sys-color-surface-container);
+    background-color: var(--md-sys-color-surface-container);
     color: var(--md-sys-color-on-surface);
     padding: 0 1rem;
     border-radius: 1000px;
     transform: translate(-50%, -50%);
     z-index: var(--z-drawer);
+    backdrop-filter: blur(100px);
 }
 
 .scrim {
+    display: block;
     position: fixed;
     bottom: calc(50% - var(--drawer-height));
     left: 50%;
@@ -51,6 +53,8 @@
     width: 100vw;
     height: 100vh;
     background-color: var(--md-sys-color-scrim);
+    backdrop-filter: blur(100px);
+    opacity: 32%;
     z-index: var(--z-scrim);
     pointer-events: none;
 }

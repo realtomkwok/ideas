@@ -8,7 +8,6 @@ import { useEffect, useState } from "react"
 const Drawer: React.FC = () => {
     const apps = useAppStore((state) => state.apps)
     const selectedAppId = useAppStore((state) => state.activeAppId)
-
     const [showScrim, setShowScrim] = useState(false)
 
     useEffect(() => {
@@ -34,16 +33,17 @@ const Drawer: React.FC = () => {
             </div>
             <motion.div
                 className="scrim"
-                initial={{ display: "none" }}
+                initial={{ visibility: "hidden" }}
                 animate={
                     showScrim
                         ? {
-                              display: "block",
-                              opacity: 0.8,
+                              visibility: "visible",
+                              opacity: 0.32,
+                              backdropFilter: "blur(10px)",
                               transition: transition.enter,
                           }
                         : {
-                              display: "none",
+                              visibility: "hidden",
                               opacity: 0,
                               transition: transition.exit,
                           }
