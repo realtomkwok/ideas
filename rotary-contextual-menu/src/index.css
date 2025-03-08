@@ -1,5 +1,5 @@
-@import url(themes/light.css) screen and (prefers-color-scheme: light);
-@import url(themes/dark.css) screen and (prefers-color-scheme: dark);
+@import url(./themes/light.css) screen and (prefers-color-scheme: light);
+@import url(./themes/dark.css) screen and (prefers-color-scheme: dark);
 @import url(../node_modules/modern-normalize/modern-normalize.css);
 
 :root {
