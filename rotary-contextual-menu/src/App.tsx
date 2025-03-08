@@ -4,6 +4,19 @@ import { Application } from "./components/Application.tsx"
 import { motion } from "motion/react"
 import { transition } from "./libs/motionUtils.ts"
 import { useEffect, useState } from "react"
+import { useThemeStore } from "./store/themeStore.ts"
+
+// Theme initializer component
+const ThemeInitializer: React.FC = () => {
+    const applyTheme = useThemeStore((state) => state.applyTheme)
+
+    // Apply theme on mount
+    useEffect(() => {
+        applyTheme()
+    }, [applyTheme])
+
+    return null // This component doesn't render anything
+}
 
 const Drawer: React.FC = () => {
     const apps = useAppStore((state) => state.apps)
@@ -56,6 +69,9 @@ const Drawer: React.FC = () => {
 function App() {
     return (
         <div className="home">
+            {/* Initialize theme */}
+            <ThemeInitializer />
+
             <div className="modal">
                 <h1>Rotary Contextual Menu</h1>
                 <p>Long press the app icons to activate the contextual menu.</p>

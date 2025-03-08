@@ -1,5 +1,9 @@
-@import url(./themes/light.css) screen and (prefers-color-scheme: light);
-@import url(./themes/dark.css) screen and (prefers-color-scheme: dark);
+@import url(./themes/light.css);
+@import url(./themes/dark.css);
+@import url(./themes/light-hc.css);
+@import url(./themes/light-mc.css);
+@import url(./themes/dark-hc.css);
+@import url(./themes/dark-mc.css);
 @import url(../node_modules/modern-normalize/modern-normalize.css);
 
 :root {
@@ -118,4 +122,10 @@ p, caption, label {
 
 button {
     border: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
 }
