@@ -1,0 +1,3 @@
+name = "rcm"
+main = "./dist/main.tsx"
+compatibility_date = "2025-03-08"

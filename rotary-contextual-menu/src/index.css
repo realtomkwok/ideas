@@ -1,5 +1,9 @@
-@import url(themes/light.css) screen and (prefers-color-scheme: light);
-@import url(themes/dark.css) screen and (prefers-color-scheme: dark);
+@import url(./themes/light.css);
+@import url(./themes/dark.css);
+@import url(./themes/light-hc.css);
+@import url(./themes/light-mc.css);
+@import url(./themes/dark-hc.css);
+@import url(./themes/dark-mc.css);
 @import url(../node_modules/modern-normalize/modern-normalize.css);
 
 :root {
@@ -8,13 +12,120 @@
     -moz-user-select: none; /* Old versions of Firefox */
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+
+    .primary {
+        color: var(--md-sys-color-on-primary);
+        background-color: var(--md-sys-color-primary);
+    }
+    .on-primary {
+        color: var(--md-sys-color-primary);
+        background-color: var(--md-sys-color-on-primary);
+    }
+    .primary-container {
+        color: var(--md-sys-color-on-primary-container);
+        background-color: var(--md-sys-color-primary-container);
+    }
+    .on-primary-container {
+        color: var(--md-sys-color-primary-container);
+        background-color: var(--md-sys-color-on-primary-container);
+    }
+    .secondary {
+        color: var(--md-sys-color-on-secondary);
+        background-color: var(--md-sys-color-secondary);
+    }
+    .on-secondary {
+        color: var(--md-sys-color-secondary);
+        background-color: var(--md-sys-color-on-secondary);
+    }
+    .secondary-container {
+        color: var(--md-sys-color-on-secondary-container);
+        background-color: var(--md-sys-color-secondary-container);
+    }
+    .on-secondary-container {
+        color: var(--md-sys-color-secondary-container);
+        background-color: var(--md-sys-color-on-secondary-container);
+    }
+    .tertiary {
+        color: var(--md-sys-color-on-tertiary);
+        background-color: var(--md-sys-color-tertiary);
+    }
+    .on-tertiary {
+        color: var(--md-sys-color-tertiary);
+        background-color: var(--md-sys-color-on-tertiary);
+    }
+    .tertiary-container {
+        color: var(--md-sys-color-on-tertiary-container);
+        background-color: var(--md-sys-color-tertiary-container);
+    }
+    .on-tertiary-container {
+        color: var(--md-sys-color-tertiary-container);
+        background-color: var(--md-sys-color-on-tertiary-container);
+    }
+    .background {
+        color: var(--md-sys-color-on-background);
+        background-color: var(--md-sys-color-background);
+    }
+    .surface {
+        color: var(--md-sys-color-on-surface);
+        background-color: var(--md-sys-color-surface);
+    }
+    .surface-variant {
+        color: var(--md-sys-color-on-surface-variant);
+        background-color: var(--md-sys-color-surface-variant);
+    }
+    .on-surface-variant {
+        color: var(--md-sys-color-surface-variant);
+        background-color: var(--md-sys-color-on-surface-variant);
+    }
+    .outline {
+        border: 1px solid var(--md-sys-color-outline);
+    }
+    .inverse-surface {
+        color: var(--md-sys-color-inverse-on-surface);
+        background-color: var(--md-sys-color-inverse-surface);
+    }
+    .on-inverse-surface {
+        color: var(--md-sys-color-inverse-surface);
+        background-color: var(--md-sys-color-inverse-on-surface);
+    }
+    .error {
+        color: var(--md-sys-color-on-error);
+        background-color: var(--md-sys-color-error);
+    }
+    .on-error {
+        color: var(--md-sys-color-error);
+        background-color: var(--md-sys-color-on-error);
+    }
+    .error-container {
+        color: var(--md-sys-color-on-error-container);
+        background-color: var(--md-sys-color-error-container);
+    }
+    .on-error-container {
+        color: var(--md-sys-color-error-container);
+        background-color: var(--md-sys-color-on-error-container);
+    }
 }
 
 body {
     color: var(--md-sys-color-on-surface);
     background-color: var(--md-sys-color-surface);
+    overflow: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'neue-haas-grotesk-display', 'Helvetica Neue', 'Arial', sans-serif;
+}
+
+p, caption, label {
+    font-family: 'neue-haas-grotesk-text', 'Helvetica Neue', 'Arial', sans-serif;
 }
 
 button {
     border: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
 }

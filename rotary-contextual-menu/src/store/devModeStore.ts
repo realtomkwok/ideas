@@ -11,7 +11,7 @@ type DevModeAction = {
 type DevModeStore = DevModeState & DevModeAction
 
 const useDevModeStore = create<DevModeStore>((set, get) => ({
-    devMode: true,
+    devMode: false,
     setDevMode: () => {
         const { devMode } = get()
         set({ devMode: !devMode })

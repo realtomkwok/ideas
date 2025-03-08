@@ -1,16 +1,39 @@
 import "./App.css"
-// import { Application } from "./components/Application.tsx"
 import useAppStore from "./store/appStore.ts"
-import { motion } from "motion/react"
 import { Application } from "./components/Application.tsx"
-import useDevModeStore from "./store/devModeStore.ts"
+import { motion } from "motion/react"
+import { transition } from "./libs/motionUtils.ts"
+import { useEffect, useState } from "react"
+import { useThemeStore } from "./store/themeStore.ts"
+
+// Theme initializer component
+const ThemeInitializer: React.FC = () => {
+    const applyTheme = useThemeStore((state) => state.applyTheme)
+
+    // Apply theme on mount
+    useEffect(() => {
+        applyTheme()
+    }, [applyTheme])
+
+    return null // This component doesn't render anything
+}
 
 const Drawer: React.FC = () => {
     const apps = useAppStore((state) => state.apps)
-    const activeAppId = useAppStore((state) => state.activeAppId)
+    const selectedAppId = useAppStore((state) => state.activeAppId)
+    const [showScrim, setShowScrim] = useState(false)
+
+    useEffect(() => {
+        if (selectedAppId) {
+            setShowScrim(true)
+        } else {
+            setShowScrim(false)
+        }
+    }, [selectedAppId])
 
     return (
         <div className="drawer">
+            <p className="hint">Long-press an app to show the quick actions</p>
             <div className="apps">
                 {apps.map((app) => (
                     <Application
@@ -24,10 +47,20 @@ const Drawer: React.FC = () => {
             </div>
             <motion.div
                 className="scrim"
+                initial={{ visibility: "hidden" }}
                 animate={
-                    activeAppId
-                        ? { display: "block", opacity: 0.4 }
-                        : { display: "none", opacity: 0 }
+                    showScrim
+                        ? {
+                              visibility: "visible",
+                              opacity: 0.32,
+                              backdropFilter: "blur(10px)",
+                              transition: transition.enter,
+                          }
+                        : {
+                              visibility: "hidden",
+                              opacity: 0,
+                              transition: transition.exit,
+                          }
                 }
             />
         </div>
@@ -35,20 +68,28 @@ const Drawer: React.FC = () => {
 }
 
 function App() {
-    const activeAppId = useAppStore((state) => state.activeAppId)
-    const devMode = useDevModeStore((state) => state.devMode)
-
     return (
-        <div
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-            }}
-        >
+        <div className="home">
+            {/* Initialize theme */}
+            <ThemeInitializer />
+
+            <div className="modal">
+                <h1>Rotary Contextual Menu</h1>
+                <div>
+                    <p>
+                        Seen on Pinterest's app when you long-press an image,
+                        but what if it works on your home screen as well like
+                        the good old 3D-touch quick action menu.
+                    </p>
+                    <p>
+                        <span>Made by </span>
+                        <a href="https://tomkwok.xyz">
+                            <span>tomkwok.xyz</span>
+                        </a>
+                    </p>
+                </div>
+            </div>
             <Drawer />
-            <p style={{ zIndex: 200 }}>Current app: {activeAppId} </p>
-            <p>Dev Mode: {devMode ? "on" : "off"}</p>
         </div>
     )
 }

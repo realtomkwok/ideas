@@ -1,9 +1,10 @@
 import { create } from "zustand"
-import { Application } from "../components/Application.tsx"
+import { AppAction, Application } from "../components/Application.tsx"
 import { apps } from "../list-of-apps.ts"
 
 type AppStoreState = {
     apps: Application[]
+    action?: AppAction
     activeAppId: Application["id"] | null
 }
 
@@ -12,6 +13,8 @@ type AppStoreAction = {
     setApps: (apps: Application[]) => void
     /** Set the selected app */
     selectApp: (appId: Application["id"]) => void
+    /** Set the action of the selected app (if there is one) */
+    selectAction: (action: AppAction) => void
     /** Clear selection */
     clearSelection: () => void
 
@@ -29,14 +32,10 @@ const useAppStore = create<AppStore>((set, get) => ({
 
     selectApp: (appId: Application["id"]): void => {
         set({ activeAppId: appId })
+    },
 
-        const { activeAppId, apps } = get()
-
-        const selectedApp = apps.find((app) => app.id === activeAppId)
-
-        if (selectedApp) {
-            console.log(`App selected: ${selectedApp.name}`)
-        }
+    selectAction: (action: AppAction): void => {
+        set({ action })
     },
 
     clearSelection: (): void => {
