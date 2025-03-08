@@ -33,6 +33,7 @@ const Drawer: React.FC = () => {
 
     return (
         <div className="drawer">
+            <p className="hint">Long-press an app to show the quick actions</p>
             <div className="apps">
                 {apps.map((app) => (
                     <Application
@@ -74,7 +75,19 @@ function App() {
 
             <div className="modal">
                 <h1>Rotary Contextual Menu</h1>
-                <p>Long press the app icons to activate the contextual menu.</p>
+                <div>
+                    <p>
+                        Seen on Pinterest's app when you long-press an image,
+                        but what if it works on your home screen as well like
+                        the good old 3D-touch quick action menu.
+                    </p>
+                    <p>
+                        <span>Made by </span>
+                        <a href="https://tomkwok.xyz">
+                            <span>tomkwok.xyz</span>
+                        </a>
+                    </p>
+                </div>
             </div>
             <Drawer />
         </div>

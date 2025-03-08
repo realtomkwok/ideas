@@ -56,6 +56,8 @@ export const useThemeStore = create<themeStore>()(
 
                 // Determine theme
                 let activeTheme = theme
+                // Add a listener for the `matchMedia`
+
                 if (useSystemTheme) {
                     activeTheme = window.matchMedia(
                         "(prefers-color-scheme: light)"
